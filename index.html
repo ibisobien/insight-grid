@@ -1,1209 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insight Grid — Data Analytics & Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        html { scroll-behavior: smooth; }
-        body {
-            background: #161a2e;
-            color: #ffffff;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insight-Grid — Learn Excel, Power BI &amp; SQL</title>
+<meta name="description" content="Insight-Grid's 3-month data analytics bundle: Excel, Power BI and SQL in one structured path. First 10 registrants pay ₦90,000.">
+<link rel="icon" href="assets/logo.png">
 
-        .hero-gradient {
-            background: linear-gradient(to right, rgba(34,211,238,0.15), rgba(59,130,246,0.15), rgba(139,92,246,0.1), transparent);
-        }
-        .grid-bg {
-            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .text-gradient-cyan {
-            background: linear-gradient(to right, #22d3ee, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .text-gradient-gold {
-            background: linear-gradient(to right, #fbbf24, #f59e0b, #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .card-border {
-            border: 1px solid rgba(255,255,255,0.12);
-        }
-        .card-glow:hover {
-            border-color: rgba(34,211,238,0.4);
-            box-shadow: 0 0 40px rgba(34,211,238,0.12);
-        }
-        .early-bird-glow {
-            box-shadow: 0 0 60px rgba(34,211,238,0.15), 0 0 120px rgba(34,211,238,0.05);
-            border: 1px solid rgba(34,211,238,0.35);
-        }
-        .price-strike {
-            position: relative;
-            display: inline-block;
-        }
-        .price-strike::after {
-            content: '';
-            position: absolute;
-            left: -4px;
-            right: -4px;
-            top: 50%;
-            height: 3px;
-            background: #ef4444;
-            transform: rotate(-8deg);
-            border-radius: 2px;
-        }
-        .package-icon-container {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.15);
-        }
-        .toast {
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .float-anim { animation: float 3s ease-in-out infinite; }
-        @keyframes pulse-ring {
-            0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-        .pulse-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 2px solid #22d3ee;
-            animation: pulse-ring 2s ease-out infinite;
-        }
-        .form-input {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.14);
-            transition: all 0.3s;
-        }
-        .form-input:focus {
-            border-color: #22d3ee;
-            box-shadow: 0 0 0 3px rgba(34,211,238,0.15);
-            outline: none;
-            background: rgba(255,255,255,0.12);
-        }
-        .form-input::placeholder { color: #64748b; }
-        .btn-primary {
-            background: linear-gradient(to right, #0891b2, #2563eb);
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            box-shadow: 0 0 30px rgba(34,211,238,0.4);
-            transform: translateY(-1px);
-        }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-gold {
-            background: linear-gradient(to right, #d97706, #f59e0b);
-            transition: all 0.3s;
-        }
-        .btn-gold:hover {
-            box-shadow: 0 0 30px rgba(245,158,11,0.4);
-            transform: translateY(-1px);
-        }
-        .spotlight-card {
-            position: relative;
-            overflow: hidden;
-        }
-        .spotlight-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(34,211,238,0.08), transparent 40%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .spotlight-card:hover::before { opacity: 1; }
-        .siwes-card {
-            border: 1px solid rgba(251,191,36,0.3);
-            box-shadow: 0 0 40px rgba(251,191,36,0.08);
-        }
-        .installment-badge {
-            background: rgba(34,211,238,0.1);
-            border: 1px solid rgba(34,211,238,0.2);
-        }
-        .bg-card {
-            background: rgba(255,255,255,0.05);
-        }
-        .bg-card-bright {
-            background: rgba(255,255,255,0.07);
-        }
-        .contact-card {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            transition: all 0.3s;
-        }
-        .contact-card:hover {
-            border-color: rgba(34,211,238,0.3);
-            background: rgba(255,255,255,0.08);
-        }
-        .whatsapp-btn {
-            background: linear-gradient(to right, #16a34a, #22c55e);
-            transition: all 0.3s;
-        }
-        .whatsapp-btn:hover {
-            box-shadow: 0 0 25px rgba(34,197,94,0.4);
-            transform: translateY(-1px);
-        }
-    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
 </head>
-<body class="grid-bg">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 pt-3 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex items-center justify-between h-16 px-6 rounded-xl border border-white/12 bg-[#161a2e]/85 backdrop-blur-xl">
-                <a href="#" class="flex items-center gap-3">
-                    <img src="https://z-cdn-media.chatglm.cn/files/0ba70d4f-e4c6-44d6-9818-65ec9f8ef11e.png?auth_key=1882810081-7129733bf8f94b23a0735a660ac7ef37-0-204bac0db7dc946f428704313f85039e" alt="Insight Grid" class="h-10 w-auto">
-                </a>
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#about" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">About</a>
-                    <a href="#packages" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Packages</a>
-                    <a href="#pricing" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Pricing</a>
-                    <a href="#siwes" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">SIWES</a>
-                    <a href="#contact" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Contact</a>
-                    <a href="#register" class="btn-primary text-sm font-semibold text-white px-5 py-2.5 rounded-lg">Register Now</a>
-                </div>
-                <button id="mobileMenuBtn" class="md:hidden text-white p-2">
-                    <i data-lucide="menu" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <div id="mobileMenu" class="hidden md:hidden mt-2 rounded-xl border border-white/12 bg-[#161a2e]/92 backdrop-blur-xl p-4 space-y-3">
-                <a href="#about" class="block text-sm font-medium text-slate-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5 transition-all">About</a>
-                <a href="#packages" class="block text-sm font-medium text-slate-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5 transition-all">Packages</a>
-                <a href="#pricing" class="block text-sm font-medium text-slate-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5 transition-all">Pricing</a>
-                <a href="#siwes" class="block text-sm font-medium text-slate-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5 transition-all">SIWES</a>
-                <a href="#contact" class="block text-sm font-medium text-slate-300 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5 transition-all">Contact</a>
-                <a href="#register" class="block btn-primary text-sm font-semibold text-white py-2.5 px-3 rounded-lg text-center">Register Now</a>
-            </div>
-        </div>
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar">
+  <div class="container topbar__inner">
+    <a class="brand" href="#top" aria-label="Insight-Grid home">
+      <img src="assets/logo.png" alt="Insight-Grid — Data Analytics &amp; Intelligence">
+    </a>
+    <nav aria-label="Primary">
+      <a href="#packages">Packages</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#siwes">SIWES</a>
+      <a href="#contact">Contact</a>
     </nav>
+    <a href="#register" class="btn btn-primary">Register now</a>
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center pt-20">
-        <div class="hero-gradient absolute inset-0 pointer-events-none"></div>
-        <div class="absolute top-1/4 -left-40 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/6 rounded-full blur-[150px] pointer-events-none"></div>
+<main id="top">
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-sm">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-                        </span>
-                        <span class="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Registration Open — Limited Slots</span>
-                    </div>
-
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-[0.95] tracking-tight">
-                        Master<br>
-                        <span class="text-gradient-cyan">Data Analysis</span><br>
-                        in 3 Months
-                    </h1>
-
-                    <p class="text-lg text-slate-200 font-light leading-relaxed max-w-lg">
-                        Become a professional data analyst with <strong class="text-white font-medium">Excel</strong>, <strong class="text-white font-medium">Power BI</strong>, and <strong class="text-white font-medium">SQL</strong> — just <strong class="text-cyan-400 font-medium">₦100,000</strong> for all three. SIWES log book & IT report also available.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#register" class="btn-primary text-lg font-semibold text-white px-8 py-4 rounded-xl text-center">
-                            Secure Your Spot →
-                        </a>
-                        <a href="#packages" class="flex items-center justify-center gap-2 text-sm font-medium text-slate-300 hover:text-white px-6 py-4 rounded-xl border border-white/14 hover:border-white/22 transition-all">
-                            <i data-lucide="play-circle" class="w-4 h-4"></i>
-                            View Packages
-                        </a>
-                    </div>
-
-                    <div class="flex items-center gap-8 pt-4">
-                        <div>
-                            <div class="text-2xl font-bold text-white">3</div>
-                            <div class="text-xs text-slate-400 uppercase tracking-wider">Months</div>
-                        </div>
-                        <div class="w-px h-10 bg-white/12"></div>
-                        <div>
-                            <div class="text-2xl font-bold text-white">3</div>
-                            <div class="text-xs text-slate-400 uppercase tracking-wider">Tools</div>
-                        </div>
-                        <div class="w-px h-10 bg-white/12"></div>
-                        <div>
-                            <div class="text-2xl font-bold text-white">₦100k</div>
-                            <div class="text-xs text-slate-400 uppercase tracking-wider">Total</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Right: Package Icons -->
-                <div class="hidden lg:flex justify-center items-center relative">
-                    <div class="relative w-[420px] h-[420px]">
-                        <div class="absolute inset-0 rounded-full border border-white/8"></div>
-                        <div class="absolute inset-8 rounded-full border border-white/8"></div>
-                        <div class="absolute inset-16 rounded-full border border-white/8"></div>
-
-                        <!-- Excel -->
-                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 float-anim" style="animation-delay: 0s;">
-                            <div class="package-icon-container w-24 h-24 rounded-2xl flex items-center justify-center p-3">
-                                <img src="https://z-cdn-media.chatglm.cn/files/ec09deae-104f-4f8d-a2f2-ed6193ffa718.png?auth_key=1882810081-a8a2f5e78a1e46caaf2e47d1010ef393-0-e44355354d0be613f9df0b6b7c80c7ae" alt="Microsoft Excel" class="w-full h-full object-contain">
-                            </div>
-                            <div class="text-center mt-2 text-xs font-medium text-slate-300">Month 1</div>
-                        </div>
-
-                        <!-- Power BI — NEW LOGO -->
-                        <div class="absolute bottom-8 left-4 float-anim" style="animation-delay: 1s;">
-                            <div class="package-icon-container w-24 h-24 rounded-2xl flex items-center justify-center p-3">
-                                <img src="https://z-cdn-media.chatglm.cn/files/6d0fe9ce-d823-4c58-b259-6571a467f28c.png?auth_key=1882811897-ab9175fbe78541b19b6b8097deaa5ed1-0-ddf91486303a0ae22a060c18f320f261" alt="Power BI" class="w-full h-full object-contain">
-                            </div>
-                            <div class="text-center mt-2 text-xs font-medium text-slate-300">Month 2</div>
-                        </div>
-
-                        <!-- SQL -->
-                        <div class="absolute bottom-8 right-4 float-anim" style="animation-delay: 2s;">
-                            <div class="package-icon-container w-24 h-24 rounded-2xl flex items-center justify-center p-3">
-                                <img src="https://z-cdn-media.chatglm.cn/files/25e91a24-b5ee-44bc-bac9-e7ba920e49c8.png?auth_key=1882810081-72bcd8fc60ff43f3994bf78dac4c0e2b-0-82930751cb3a22537fbd31c7c5df517d" alt="SQL" class="w-full h-full object-contain">
-                            </div>
-                            <div class="text-center mt-2 text-xs font-medium text-slate-300">Month 3</div>
-                        </div>
-
-                        <!-- Center Logo -->
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                            <img src="https://z-cdn-media.chatglm.cn/files/0ba70d4f-e4c6-44d6-9818-65ec9f8ef11e.png?auth_key=1882810081-7129733bf8f94b23a0735a660ac7ef37-0-204bac0db7dc946f428704313f85039e" alt="Insight Grid" class="w-36 h-auto opacity-90">
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <span class="eyebrow">3-month bundle · Excel → Power BI → SQL</span>
+        <h1>One grid.<br>Three skills.<br><em>One data analyst.</em></h1>
+        <p class="lead">Insight-Grid's data analytics program takes you through Excel, Power BI and SQL as a single connected path — one month each, built to be learned in order, not picked apart.</p>
+        <div class="hero__actions">
+          <a href="#register" class="btn btn-primary">Claim your spot</a>
+          <a href="#pricing" class="btn btn-ghost">See pricing</a>
         </div>
-    </section>
-
-    <!-- Early Bird Banner -->
-    <section class="relative py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="early-bird-glow rounded-2xl bg-gradient-to-r from-cyan-500/12 via-blue-500/12 to-purple-500/10 backdrop-blur-sm p-6 sm:p-8">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center gap-4">
-                        <div class="relative flex-shrink-0">
-                            <div class="w-14 h-14 rounded-full bg-cyan-500/20 flex items-center justify-center pulse-ring">
-                                <i data-lucide="zap" class="w-6 h-6 text-cyan-400"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-white">First 10 Persons Pay ₦90,000 Only!</h3>
-                            <p class="text-sm text-slate-300 mt-1">That's ₦10k OFF the regular ₦100k. All 3 packages included. Installment payment accepted.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="text-center">
-                            <div class="text-xs text-slate-400 uppercase tracking-wider mb-1">Spots Left</div>
-                            <div id="spotsLeft" class="text-3xl font-black text-cyan-400">10</div>
-                        </div>
-                        <div class="w-px h-12 bg-white/12"></div>
-                        <a href="#register" class="btn-primary text-sm font-semibold text-white px-6 py-3 rounded-lg whitespace-nowrap">
-                            Grab Spot →
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="hero__meta">
+          <div><strong>3</strong> months</div>
+          <div><strong>3</strong> tools, 1 path</div>
+          <div><strong>₦90,000</strong> for the first 10</div>
         </div>
-    </section>
+      </div>
 
-    <!-- About Section -->
-    <section id="about" class="py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="space-y-6">
-                    <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Why Insight Grid</div>
-                    <h2 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-                        Don't just learn data.<br><span class="text-gradient-cyan">Own it.</span>
-                    </h2>
-                    <p class="text-slate-200 font-light leading-relaxed">
-                        We don't teach theory and send you away. Our program is built for real-world impact — from writing your first Excel formula to building interactive Power BI dashboards and querying databases with SQL.
-                    </p>
-                    <div class="space-y-4 pt-4">
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <i data-lucide="check-circle-2" class="w-5 h-5 text-cyan-400"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm font-semibold text-white">Hands-on Projects</div>
-                                <div class="text-sm text-slate-300">Work on real datasets from day one, not toy examples.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <i data-lucide="check-circle-2" class="w-5 h-5 text-cyan-400"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm font-semibold text-white">Affordable — Just ₦100k</div>
-                                <div class="text-sm text-slate-300">All 3 tools for 3 months at an unbeatable price. Pay in 2 installments if you prefer.</div>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-lg bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                <i data-lucide="check-circle-2" class="w-5 h-5 text-cyan-400"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm font-semibold text-white">Career Support</div>
-                                <div class="text-sm text-slate-300">Portfolio building, resume tips, and interview prep included.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="rounded-3xl overflow-hidden border border-white/12 bg-card p-8 space-y-4">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                            <span class="text-xs text-slate-400 ml-2 font-mono">curriculum.py</span>
-                        </div>
-                        <div class="font-mono text-sm space-y-3">
-                            <div><span class="text-purple-400">class</span> <span class="text-cyan-400">DataAnalyst</span>:</div>
-                            <div class="pl-6"><span class="text-purple-400">def</span> <span class="text-blue-400">__init__</span>(self):</div>
-                            <div class="pl-12"><span class="text-green-400">self.tools</span> = [<span class="text-yellow-300">"Excel"</span>, <span class="text-yellow-300">"Power BI"</span>, <span class="text-yellow-300">"SQL"</span>]</div>
-                            <div class="pl-12"><span class="text-green-400">self.duration</span> = <span class="text-orange-400">"3 months"</span></div>
-                            <div class="pl-12"><span class="text-green-400">self.price</span> = <span class="text-orange-400">"₦100,000"</span></div>
-                            <div class="pl-12"><span class="text-green-400">self.installment</span> = <span class="text-orange-400">True</span></div>
-                            <div class="pl-6">&nbsp;</div>
-                            <div class="pl-6"><span class="text-purple-400">def</span> <span class="text-blue-400">get_outcome</span>(self):</div>
-                            <div class="pl-12"><span class="text-purple-400">return</span> <span class="text-yellow-300">"Job-Ready Analyst"</span> <span class="text-slate-400"># 🎯</span></div>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-white/10 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                            <span class="text-xs text-slate-300">Enrollment active</span>
-                        </div>
-                    </div>
-                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-cyan-500/12 rounded-full blur-[60px] pointer-events-none"></div>
-                </div>
-            </div>
+      <div class="hero__art">
+        <div class="dot-grid"></div>
+        <div class="bars" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
         </div>
-    </section>
-
-    <!-- Packages Section -->
-    <section id="packages" class="py-24 relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-4">What You'll Learn</div>
-                <h2 class="text-4xl sm:text-5xl font-black tracking-tight">Three Tools. <span class="text-gradient-cyan">One Complete Path.</span></h2>
-                <p class="text-slate-200 font-light mt-4 max-w-2xl mx-auto">Each package runs for one month. All three are bundled together — no picking and choosing. This is the full stack of data analysis.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Excel -->
-                <div class="spotlight-card card-border card-glow rounded-2xl bg-card-bright p-8 transition-all duration-300 group">
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-16 h-16 rounded-2xl package-icon-container flex items-center justify-center p-2">
-                            <img src="https://z-cdn-media.chatglm.cn/files/ec09deae-104f-4f8d-a2f2-ed6193ffa718.png?auth_key=1882810081-a8a2f5e78a1e46caaf2e47d1010ef393-0-e44355354d0be613f9df0b6b7c80c7ae" alt="Excel" class="w-full h-full object-contain">
-                        </div>
-                        <div class="px-3 py-1 rounded-full bg-white/10 border border-white/12">
-                            <span class="text-xs font-semibold text-slate-200">Month 1</span>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Microsoft Excel</h3>
-                    <p class="text-sm text-slate-300 mb-6 leading-relaxed">From basics to advanced. Master the tool that started it all.</p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Formulas & Functions (VLOOKUP, XLOOKUP, IF)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Pivot Tables & Data Modeling
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Charts & Conditional Formatting
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Data Cleaning & Validation
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Macro Introduction
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Power BI — NEW LOGO -->
-                <div class="spotlight-card card-border card-glow rounded-2xl bg-card-bright p-8 transition-all duration-300 group">
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-16 h-16 rounded-2xl package-icon-container flex items-center justify-center p-2">
-                            <img src="https://z-cdn-media.chatglm.cn/files/6d0fe9ce-d823-4c58-b259-6571a467f28c.png?auth_key=1882811897-ab9175fbe78541b19b6b8097deaa5ed1-0-ddf91486303a0ae22a060c18f320f261" alt="Power BI" class="w-full h-full object-contain">
-                        </div>
-                        <div class="px-3 py-1 rounded-full bg-white/10 border border-white/12">
-                            <span class="text-xs font-semibold text-slate-200">Month 2</span>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Power BI</h3>
-                    <p class="text-sm text-slate-300 mb-6 leading-relaxed">Build stunning, interactive dashboards that tell data stories.</p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Data Import & Transformation (Power Query)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            DAX Formulas & Measures
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Interactive Dashboard Design
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Data Modeling & Relationships
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Publish & Share Reports
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- SQL -->
-                <div class="spotlight-card card-border card-glow rounded-2xl bg-card-bright p-8 transition-all duration-300 group">
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-16 h-16 rounded-2xl package-icon-container flex items-center justify-center p-2">
-                            <img src="https://z-cdn-media.chatglm.cn/files/25e91a24-b5ee-44bc-bac9-e7ba920e49c8.png?auth_key=1882810081-72bcd8fc60ff43f3994bf78dac4c0e2b-0-82930751cb3a22537fbd31c7c5df517d" alt="SQL" class="w-full h-full object-contain">
-                        </div>
-                        <div class="px-3 py-1 rounded-full bg-white/10 border border-white/12">
-                            <span class="text-xs font-semibold text-slate-200">Month 3</span>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">SQL</h3>
-                    <p class="text-sm text-slate-300 mb-6 leading-relaxed">Speak to databases directly. Query, join, and extract insights.</p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            SELECT, WHERE, ORDER BY, GROUP BY
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            JOINs (Inner, Left, Right, Full)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Subqueries & CTEs
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Window Functions
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Database Design Basics
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <div class="hero__art-caption">
+          <span>MONTH 1 — EXCEL</span>
+          <span>MONTH 2 — POWER BI</span>
+          <span>MONTH 3 — SQL</span>
         </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-24 relative">
-        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/8 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-cyan-500/8 rounded-full blur-[100px] pointer-events-none"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-4">Pricing</div>
-                <h2 class="text-4xl sm:text-5xl font-black tracking-tight">Simple. <span class="text-gradient-cyan">Transparent.</span></h2>
-                <p class="text-slate-200 font-light mt-4 max-w-xl mx-auto">No hidden charges. Installment payment accepted (split into 2).</p>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <!-- Training - Regular -->
-                <div class="card-border rounded-2xl bg-card-bright p-8 space-y-6 flex flex-col">
-                    <div>
-                        <div class="text-sm font-medium text-slate-300 uppercase tracking-wider">Training — Regular</div>
-                        <div class="mt-3 flex items-baseline gap-2">
-                            <span class="text-5xl font-black text-white">₦100k</span>
-                        </div>
-                        <div class="text-sm text-slate-300 mt-2">Excel + Power BI + SQL (3 months)</div>
-                    </div>
-                    <div class="w-full h-px bg-white/12"></div>
-                    <ul class="space-y-3 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                            Excel (Month 1)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                            Power BI (Month 2)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                            SQL (Month 3)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-200">
-                            <i data-lucide="check" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                            Hands-on projects
-                        </li>
-                    </ul>
-                    <div class="installment-badge rounded-lg px-3 py-2 flex items-center gap-2 mb-2">
-                        <i data-lucide="split" class="w-4 h-4 text-cyan-400"></i>
-                        <span class="text-xs text-cyan-300 font-medium">Pay in 2 installments: ₦50k + ₦50k</span>
-                    </div>
-                    <a href="#register" class="block text-center text-sm font-semibold text-slate-200 px-6 py-3 rounded-xl border border-white/14 hover:border-white/22 hover:text-white transition-all">
-                        Register
-                    </a>
-                </div>
-
-                <!-- Training - Early Bird (Featured) -->
-                <div class="early-bird-glow rounded-2xl bg-gradient-to-b from-cyan-500/10 to-transparent p-8 space-y-6 relative flex flex-col">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full whitespace-nowrap">
-                            🔥 First 10 Only
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <div class="text-sm font-medium text-cyan-400 uppercase tracking-wider">Training — Early Bird</div>
-                        <div class="mt-3 flex items-baseline gap-3">
-                            <span class="text-5xl font-black text-gradient-cyan">₦90k</span>
-                            <span class="price-strike text-lg font-bold text-slate-500">₦100k</span>
-                        </div>
-                        <div class="text-sm text-green-400 mt-2 font-medium">Save ₦10,000!</div>
-                    </div>
-                    <div class="w-full h-px bg-cyan-500/20"></div>
-                    <ul class="space-y-3 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Excel (Month 1)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Power BI (Month 2)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            SQL (Month 3)
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 flex-shrink-0"></i>
-                            Hands-on projects
-                        </li>
-                    </ul>
-                    <div class="installment-badge rounded-lg px-3 py-2 flex items-center gap-2 mb-2">
-                        <i data-lucide="split" class="w-4 h-4 text-cyan-400"></i>
-                        <span class="text-xs text-cyan-300 font-medium">Pay in 2 installments: ₦45k + ₦45k</span>
-                    </div>
-                    <a href="#register" class="block btn-primary text-center text-sm font-semibold text-white px-6 py-3.5 rounded-xl">
-                        Claim Spot →
-                    </a>
-                </div>
-
-                <!-- SIWES -->
-                <div class="siwes-card rounded-2xl bg-gradient-to-b from-amber-500/10 to-transparent p-8 space-y-6 relative flex flex-col">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <div class="btn-gold text-white text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full whitespace-nowrap">
-                            📋 Add-on
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <div class="text-sm font-medium text-amber-400 uppercase tracking-wider">SIWES Package</div>
-                        <div class="mt-3 flex items-baseline gap-2">
-                            <span class="text-5xl font-black text-gradient-gold">₦50k</span>
-                        </div>
-                        <div class="text-sm text-slate-300 mt-2">Log book + IT Report</div>
-                    </div>
-                    <div class="w-full h-px bg-amber-500/18"></div>
-                    <ul class="space-y-3 flex-1">
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                            Weekly SIWES log book filling
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                            Professional IT report writing
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                            Proper formatting & chapters
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-slate-100">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                            References & abstract included
-                        </li>
-                    </ul>
-                    <div class="rounded-lg px-3 py-2 flex items-center gap-2 mb-2" style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2);">
-                        <i data-lucide="split" class="w-4 h-4 text-amber-400"></i>
-                        <span class="text-xs text-amber-300 font-medium">Pay in 2 installments: ₦25k + ₦25k</span>
-                    </div>
-                    <a href="#register" class="block btn-gold text-center text-sm font-semibold text-white px-6 py-3.5 rounded-xl">
-                        Add SIWES Package
-                    </a>
-                </div>
-            </div>
-
-            <!-- Total Summary -->
-            <div class="mt-12 max-w-5xl mx-auto">
-                <div class="rounded-2xl border border-white/12 bg-card p-6 sm:p-8">
-                    <div class="text-sm font-semibold text-white mb-4 text-center uppercase tracking-wider">Total Cost Summary</div>
-                    <div class="grid sm:grid-cols-2 gap-6">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between py-2 border-b border-white/8">
-                                <span class="text-sm text-slate-300">Training Only (Early Bird)</span>
-                                <span class="text-sm font-bold text-cyan-400">₦90,000</span>
-                            </div>
-                            <div class="flex items-center justify-between py-2 border-b border-white/8">
-                                <span class="text-sm text-slate-300">Training Only (Regular)</span>
-                                <span class="text-sm font-bold text-white">₦100,000</span>
-                            </div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between py-2 border-b border-white/8">
-                                <span class="text-sm text-slate-300">Training + SIWES (Early Bird)</span>
-                                <span class="text-sm font-bold text-cyan-400">₦140,000</span>
-                            </div>
-                            <div class="flex items-center justify-between py-2 border-b border-white/8">
-                                <span class="text-sm text-slate-300">Training + SIWES (Regular)</span>
-                                <span class="text-sm font-bold text-white">₦150,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 text-center">
-                        <div class="inline-flex items-center gap-2 installment-badge px-4 py-2 rounded-full">
-                            <i data-lucide="credit-card" class="w-4 h-4 text-cyan-400"></i>
-                            <span class="text-xs text-cyan-300 font-medium">All prices can be split into 2 installments</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SIWES Section -->
-    <section id="siwes" class="py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="rounded-3xl overflow-hidden border border-white/12 bg-card">
-                <div class="grid lg:grid-cols-2">
-                    <div class="p-8 sm:p-12 lg:p-16 space-y-6">
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/22">
-                            <i data-lucide="file-text" class="w-4 h-4 text-amber-400"></i>
-                            <span class="text-xs font-semibold text-amber-400 uppercase tracking-wider">Separate Service — ₦50,000</span>
-                        </div>
-                        <h2 class="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
-                            SIWES Log Book<br>& IT Report — <span class="text-gradient-gold">Handled.</span>
-                        </h2>
-                        <p class="text-slate-200 font-light leading-relaxed">
-                            We know the struggle. That's why we offer this as a dedicated service — weekly SIWES log book filling and a comprehensive, professional IT report at the end of your program. You walk away with complete documentation.
-                        </p>
-                        <div class="space-y-4 pt-2">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
-                                </div>
-                                <span class="text-sm text-slate-200">Weekly SIWES log book entries</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
-                                </div>
-                                <span class="text-sm text-slate-200">Professional IT report writing</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
-                                </div>
-                                <span class="text-sm text-slate-200">Proper formatting (abstract, chapters, references)</span>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center flex-shrink-0">
-                                    <i data-lucide="split" class="w-4 h-4 text-amber-400"></i>
-                                </div>
-                                <span class="text-sm text-slate-200">Can pay in 2 installments (₦25k + ₦25k)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="relative bg-gradient-to-br from-amber-500/6 to-cyan-500/6 border-l border-white/10 p-8 sm:p-12 flex items-center justify-center">
-                        <div class="text-center space-y-6">
-                            <div class="w-24 h-24 mx-auto rounded-2xl bg-amber-500/12 border border-amber-500/22 flex items-center justify-center">
-                                <i data-lucide="book-open" class="w-10 h-10 text-amber-400"></i>
-                            </div>
-                            <div>
-                                <div class="text-5xl font-black text-gradient-gold">₦50k</div>
-                                <div class="text-sm text-slate-300 mt-2">Complete SIWES Service</div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="flex items-center justify-center gap-2 text-slate-200">
-                                    <i data-lucide="file-check" class="w-4 h-4"></i>
-                                    <span class="text-sm">Log Book Filling</span>
-                                </div>
-                                <div class="flex items-center justify-center gap-2 text-slate-200">
-                                    <i data-lucide="file-text" class="w-4 h-4"></i>
-                                    <span class="text-sm">IT Report Writing</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-24 relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/6 rounded-full blur-[100px] pointer-events-none"></div>
-        <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-4">Get in Touch</div>
-                <h2 class="text-4xl sm:text-5xl font-black tracking-tight">Contact <span class="text-gradient-cyan">Us</span></h2>
-                <p class="text-slate-200 font-light mt-4">Have questions? Reach out — we respond fast.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 gap-6">
-                <!-- WhatsApp / Call -->
-                <a href="https://wa.me/2348163641496" target="_blank" class="contact-card rounded-2xl p-8 flex flex-col items-center text-center space-y-4 group">
-                    <div class="w-16 h-16 rounded-2xl bg-green-500/12 border border-green-500/22 flex items-center justify-center group-hover:bg-green-500/18 transition-colors">
-                        <svg class="w-8 h-8 text-green-400" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="text-lg font-bold text-white">WhatsApp / Call</div>
-                        <div class="text-sm text-cyan-400 font-medium mt-1">08163641496</div>
-                    </div>
-                    <div class="whatsapp-btn text-sm font-semibold text-white px-5 py-2.5 rounded-lg w-full text-center">
-                        Chat Now
-                    </div>
-                </a>
-
-                <!-- Email -->
-                <a href="mailto:insightgrid08@gmail.com" class="contact-card rounded-2xl p-8 flex flex-col items-center text-center space-y-4 group">
-                    <div class="w-16 h-16 rounded-2xl bg-cyan-500/12 border border-cyan-500/22 flex items-center justify-center group-hover:bg-cyan-500/18 transition-colors">
-                        <i data-lucide="mail" class="w-8 h-8 text-cyan-400"></i>
-                    </div>
-                    <div>
-                        <div class="text-lg font-bold text-white">Email</div>
-                        <div class="text-sm text-cyan-400 font-medium mt-1 break-all">insightgrid08@gmail.com</div>
-                    </div>
-                    <div class="btn-primary text-sm font-semibold text-white px-5 py-2.5 rounded-lg w-full text-center">
-                        Send Email
-                    </div>
-                </a>
-            </div>
-
-            <!-- Quick reach note -->
-            <div class="mt-8 text-center">
-                <p class="text-sm text-slate-300">
-                    💬 <strong class="text-white">Fastest way to reach us:</strong> Send a WhatsApp message to 
-                    <a href="https://wa.me/2348163641496" target="_blank" class="text-cyan-400 hover:underline font-medium">08163641496</a> 
-                    — we typically reply within minutes.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Registration Section -->
-    <section id="register" class="py-24 relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none"></div>
-        <div class="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <div class="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-4">Registration</div>
-                <h2 class="text-4xl sm:text-5xl font-black tracking-tight">Secure Your <span class="text-gradient-cyan">Spot</span></h2>
-                <p class="text-slate-200 font-light mt-4">Fill in your details below. We'll reach out with payment details.</p>
-            </div>
-
-            <form id="registrationForm" class="card-border rounded-2xl bg-card-bright p-8 sm:p-10 space-y-6">
-                <div class="grid sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-200">First Name *</label>
-                        <input type="text" name="firstName" required placeholder="e.g. Adebayo" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-200">Last Name *</label>
-                        <input type="text" name="lastName" required placeholder="e.g. Johnson" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-200">Email Address *</label>
-                    <input type="email" name="email" required placeholder="you@example.com" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-200">Phone Number (WhatsApp) *</label>
-                    <input type="tel" name="phone" required placeholder="08012345678" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                </div>
-
-                <div class="grid sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-200">Institution / School</label>
-                        <input type="text" name="institution" placeholder="e.g. UNILAG" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-200">Department</label>
-                        <input type="text" name="department" placeholder="e.g. Computer Science" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-200">What are you registering for? *</label>
-                    <select name="package" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-white appearance-none cursor-pointer">
-                        <option value="" class="bg-[#161a2e]">Select an option</option>
-                        <option value="Training Only (₦100k)" class="bg-[#161a2e]">Training Only — ₦100,000</option>
-                        <option value="Training + SIWES (₦150k)" class="bg-[#161a2e]">Training + SIWES — ₦150,000</option>
-                        <option value="SIWES Only (₦50k)" class="bg-[#161a2e]">SIWES Only (Log Book + IT Report) — ₦50,000</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-200">Preferred Payment Method *</label>
-                    <select name="paymentMethod" required class="form-input w-full px-4 py-3 rounded-xl text-sm text-white appearance-none cursor-pointer">
-                        <option value="" class="bg-[#161a2e]">Select an option</option>
-                        <option value="Full Payment" class="bg-[#161a2e]">Full Payment (one-time)</option>
-                        <option value="Installment (2 times)" class="bg-[#161a2e]">Installment (split into 2 payments)</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-200">How did you hear about us?</label>
-                    <select name="source" class="form-input w-full px-4 py-3 rounded-xl text-sm text-white appearance-none cursor-pointer">
-                        <option value="" class="bg-[#161a2e]">Select an option</option>
-                        <option value="WhatsApp" class="bg-[#161a2e]">WhatsApp</option>
-                        <option value="Instagram" class="bg-[#161a2e]">Instagram</option>
-                        <option value="Twitter/X" class="bg-[#161a2e]">Twitter / X</option>
-                        <option value="Facebook" class="bg-[#161a2e]">Facebook</option>
-                        <option value="Friend/Referral" class="bg-[#161a2e]">Friend / Referral</option>
-                        <option value="Flyer" class="bg-[#161a2e]">Flyer / Poster</option>
-                        <option value="Other" class="bg-[#161a2e]">Other</option>
-                    </select>
-                </div>
-
-                <div class="rounded-xl bg-cyan-500/10 border border-cyan-500/18 p-4 space-y-2">
-                    <div class="flex items-center gap-2 text-sm font-semibold text-cyan-400">
-                        <i data-lucide="package" class="w-4 h-4"></i>
-                        Training Bundle: Excel + Power BI + SQL (3 Months)
-                    </div>
-                    <div class="text-xs text-slate-300 ml-6">SIWES (Log Book + IT Report) is a separate ₦50k add-on</div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                    <input type="checkbox" id="consent" required class="mt-1 w-4 h-4 rounded border-white/20 bg-white/8 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0 cursor-pointer">
-                    <label for="consent" class="text-xs text-slate-300 leading-relaxed cursor-pointer">
-                        I agree to be contacted by Insight Grid regarding this registration and understand that my information will be stored securely.
-                    </label>
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full btn-primary text-base font-semibold text-white py-4 rounded-xl flex items-center justify-center gap-2">
-                    <span id="btnText">Complete Registration</span>
-                    <i data-lucide="arrow-right" class="w-5 h-5" id="btnIcon"></i>
-                    <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </button>
-
-                <div id="formError" class="hidden text-sm text-red-400 text-center bg-red-500/10 border border-red-500/22 rounded-xl p-3"></div>
-                <div id="formSuccess" class="hidden text-sm text-green-400 text-center bg-green-500/10 border border-green-500/22 rounded-xl p-4">
-                    <div class="font-semibold mb-1">🎉 Registration Successful!</div>
-                    <div class="text-green-500/70">We'll contact you shortly on WhatsApp with payment details.</div>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/10 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-3 gap-8 items-center">
-                <div class="flex items-center gap-3">
-                    <img src="https://z-cdn-media.chatglm.cn/files/0ba70d4f-e4c6-44d6-9818-65ec9f8ef11e.png?auth_key=1882810081-7129733bf8f94b23a0735a660ac7ef37-0-204bac0db7dc946f428704313f85039e" alt="Insight Grid" class="h-8 w-auto">
-                </div>
-                <div class="flex items-center justify-center gap-6">
-                    <a href="#about" class="text-sm text-slate-400 hover:text-white transition-colors">About</a>
-                    <a href="#packages" class="text-sm text-slate-400 hover:text-white transition-colors">Packages</a>
-                    <a href="#pricing" class="text-sm text-slate-400 hover:text-white transition-colors">Pricing</a>
-                    <a href="#register" class="text-sm text-slate-400 hover:text-white transition-colors">Register</a>
-                </div>
-                <div class="flex flex-col sm:flex-row items-center md:justify-end gap-3 text-sm">
-                    <a href="mailto:insightgrid08@gmail.com" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors">
-                        <i data-lucide="mail" class="w-4 h-4"></i>
-                        insightgrid08@gmail.com
-                    </a>
-                    <a href="https://wa.me/2348163641496" target="_blank" class="flex items-center gap-2 text-slate-400 hover:text-green-400 transition-colors">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                        08163641496
-                    </a>
-                </div>
-            </div>
-            <div class="mt-8 pt-6 border-t border-white/8 text-center">
-                <span class="text-sm text-slate-500">© 2025 Insight Grid. All rights reserved.</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast fixed bottom-6 right-6 z-50 max-w-sm">
-        <div class="rounded-xl border border-white/12 bg-[#161a2e]/95 backdrop-blur-xl p-4 shadow-2xl">
-            <div class="flex items-start gap-3">
-                <div id="toastIcon" class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"></div>
-                <div>
-                    <div id="toastTitle" class="text-sm font-semibold text-white"></div>
-                    <div id="toastMsg" class="text-xs text-slate-300 mt-0.5"></div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </section>
 
-    <script>
-    <script>
-        lucide.createIcons();
+  <!-- ===================== PACKAGES ===================== -->
+  <section class="packages" id="packages">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">The toolkit</span>
+        <h2>What you'll learn, in order</h2>
+        <p>The program is delivered as one complete bundle. Tools build on each other month to month, so packages aren't sold or chosen separately.</p>
+      </div>
 
-        // ============================================
-        // PASTE YOUR URL BELOW — no quotes issues
-        // ============================================
-        var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwX3DSTng_m7pJnBDoGcYdTvSSQiTF_6l-J3L2vrelk5cb_HLtC3hX-ZVwRS4opuzhG/exec";
+      <div class="path">
+        <div class="path-card">
+          <span class="month-tag">Month 01</span>
+          <div class="logo-badge"><img src="assets/excel-logo.png" alt="Microsoft Excel logo"></div>
+          <h3>Excel</h3>
+          <p>Formulas, pivot tables, dashboards and the spreadsheet fundamentals every analyst leans on daily.</p>
+        </div>
+        <div class="path-card">
+          <span class="month-tag">Month 02</span>
+          <div class="logo-badge"><img src="assets/powerbi-logo.png" alt="Microsoft Power BI logo"></div>
+          <h3>Power BI</h3>
+          <p>Power Query, DAX and report design — turning raw data into dashboards people actually understand.</p>
+        </div>
+        <div class="path-card">
+          <span class="month-tag">Month 03</span>
+          <div class="logo-badge"><img src="assets/sql-logo.jpg" alt="SQL database logo"></div>
+          <h3>SQL</h3>
+          <p>Querying, joins and database logic — the skill that lets you pull your own data instead of waiting on it.</p>
+        </div>
+      </div>
 
-        var MAX_EARLY_BIRD = 10;
-        var currentCount = 0;
+      <div class="packages__note">
+        <span>📦</span>
+        <p><strong>It's all one package.</strong> Excel, Power BI and SQL are taught back-to-back over 3 months as a single bundle — you can't register for just one tool.</p>
+      </div>
+    </div>
+  </section>
 
-        // Hidden iframe to receive response
-        var hiddenFrame = document.createElement('iframe');
-        hiddenFrame.name = 'hiddenFrame';
-        hiddenFrame.style.display = 'none';
-        document.body.appendChild(hiddenFrame);
+  <!-- ===================== PRICING + TRACKER ===================== -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Pricing</span>
+        <h2>One price for all 3 months</h2>
+        <p>The full bundle — Excel, Power BI and SQL together — is ₦100,000, not ₦100,000 per package. The first 10 people to register pay ₦90,000 for everything.</p>
+      </div>
 
-        // Listen for success message from iframe
-        window.addEventListener('message', function(e) {
-            if (e.data === 'ok') {
-                onSubmissionSuccess(lastSubmittedData);
-            }
-        });
+      <div class="pricing__grid">
+        <div class="price-card">
+          <div class="dot-grid"></div>
+          <div class="price-card__top">
+            <div>
+              <h3>Full Data Analytics Bundle</h3>
+              <p class="sub">Excel + Power BI + SQL · 3 months</p>
+            </div>
+          </div>
+          <div class="price-tag">
+            <span class="amount" id="dynamicPrice">₦90,000</span>
+            <span class="was" id="dynamicWas">₦100,000</span>
+          </div>
+          <p class="price-caption" id="priceCaption">Lucky-10 price — applies automatically while spots last.</p>
+          <ul>
+            <li>All 3 packages, taught in sequence — nothing sold separately</li>
+            <li>₦100,000 covers the entire 3-month program, not each tool</li>
+            <li>First 10 registrants only pay ₦90,000 for the whole bundle</li>
+            <li>SIWES logbook &amp; IT report writing available as an add-on</li>
+          </ul>
+          <a href="#register" class="btn btn-primary btn-block">Register for the bundle</a>
+        </div>
 
-        var lastSubmittedData = {};
+        <div class="tracker-card">
+          <h4>Lucky 10 tracker</h4>
+          <p class="tracker-sub">Live count from our registration sheet — see if you're still in the discount window.</p>
+          <div class="tracker-dots" id="trackerDots" aria-hidden="true">
+            <!-- 10 dots injected by script.js -->
+          </div>
+          <div class="tracker-status" id="trackerStatus">
+            <span class="count-num" id="registeredCount">—</span> people registered so far · checking slots…
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        // ============================================
-        // FETCH COUNT
-        // ============================================
-        function fetchCount() {
-            fetch(SCRIPT_URL)
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    updateCounterUI(data.count || 0);
-                })
-                .catch(function() {
-                    // silently fail
-                });
-        }
-        fetchCount();
-        setInterval(fetchCount, 15000);
+  <!-- ===================== SIWES ===================== -->
+  <section class="siwes" id="siwes">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Add-on service</span>
+        <h2>SIWES logbook &amp; IT report</h2>
+        <p>For students on industrial training, we handle the paperwork that comes after the learning.</p>
+      </div>
 
-        function updateCounterUI(count) {
-            currentCount = count;
-            var clamped = Math.min(count, MAX_EARLY_BIRD);
-            var left = MAX_EARLY_BIRD - clamped;
+      <div class="siwes__card">
+        <div>
+          <span class="eyebrow">Done for you</span>
+          <h3>Weekly logbook filling + final IT report writing</h3>
+          <p>We fill your SIWES logbook week by week and write your final IT report at the end of your industrial training, structured and ready to submit.</p>
+          <div class="siwes__tags">
+            <span>Weekly logbook entries</span>
+            <span>End-of-IT report writing</span>
+            <span>Independent of the data analytics bundle</span>
+          </div>
+        </div>
+        <div class="siwes__price">
+          <span class="amount">₦50,000</span>
+          <span class="label">Full SIWES package</span>
+          <div class="plan">✓ 2-installment plan accepted</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            var countEl = document.getElementById('registeredCount');
-            var leftEl = document.getElementById('spotsLeftCount');
-            var nextEl = document.getElementById('nextNumber');
+  <!-- ===================== REGISTRATION ===================== -->
+  <section class="register" id="register">
+    <div class="container">
+      <div class="register__panel">
+        <div class="register__intro">
+          <span class="eyebrow">Registration</span>
+          <h2>Reserve your seat</h2>
+          <p>Fill the form below — it's saved straight to our registration sheet, the same one the lucky-10 tracker reads from.</p>
+          <ul class="register__list">
+            <li>One bundle: Excel, Power BI &amp; SQL — no picking individual tools</li>
+            <li>First 10 registrants locked in at ₦90,000</li>
+            <li>SIWES logbook &amp; report writing optional, ₦50,000</li>
+            <li>We'll reach out by email or WhatsApp to confirm your batch</li>
+          </ul>
+        </div>
 
-            if (countEl) countEl.textContent = clamped;
-            if (leftEl) leftEl.textContent = left;
-            if (nextEl) nextEl.textContent = left > 0 ? (clamped + 1) : '—';
-            if (document.getElementById('spotsLeft')) document.getElementById('spotsLeft').textContent = left;
-            if (document.getElementById('formSpotsLeft')) document.getElementById('formSpotsLeft').textContent = left;
+        <form id="registerForm" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input type="text" id="fullName" name="fullName" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="phone">Phone / WhatsApp</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="0816 364 1496">
+            </div>
+          </div>
 
-            var pct = (clamped / MAX_EARLY_BIRD) * 100;
-            var bar = document.getElementById('progressBar');
-            if (bar) {
-                bar.style.width = pct + '%';
-                if (left === 0) bar.classList.add('full');
-            }
+          <div class="field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+          </div>
 
-            var dots = document.querySelectorAll('.spot-dot');
-            dots.forEach(function(dot, i) {
-                dot.classList.remove('taken', 'current');
-                if (i < clamped) dot.classList.add('taken');
-                else if (i === clamped && left > 0) dot.classList.add('current');
-            });
+          <div class="field">
+            <label>Bundle</label>
+            <input type="text" value="Excel + Power BI + SQL — Full 3-Month Bundle" disabled style="color:var(--ink-faint); background:var(--bg-tint);">
+          </div>
 
-            if (left <= 0) {
-                var overlay = document.getElementById('soldOutOverlay');
-                if (overlay) overlay.classList.remove('hidden');
-                var content = document.getElementById('bannerContent');
-                if (content) { content.style.opacity = '0.3'; content.style.pointerEvents = 'none'; }
-                var ebSold = document.getElementById('earlyBirdSoldOut');
-                if (ebSold) ebSold.classList.remove('hidden');
-                var ebBtn = document.getElementById('earlyBirdBtn');
-                if (ebBtn) ebBtn.style.display = 'none';
-                var posLabel = document.getElementById('positionLabel');
-                if (posLabel) posLabel.innerHTML = '<span class="text-red-400">All 10 spots taken</span>';
-            }
-        }
+          <div class="field">
+            <label>Add SIWES logbook &amp; IT report writing (₦50,000)?</label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="siwes" value="No" checked> No, just the bundle</label>
+              <label class="radio-option"><input type="radio" name="siwes" value="Yes - full payment"> Yes — full payment</label>
+              <label class="radio-option"><input type="radio" name="siwes" value="Yes - 2 installments"> Yes — 2 installments</label>
+            </div>
+          </div>
 
-        // ============================================
-        // MOBILE MENU
-        // ============================================
-        var mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        var mobileMenu = document.getElementById('mobileMenu');
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-        }
-        if (mobileMenu) {
-            mobileMenu.querySelectorAll('a').forEach(function(link) {
-                link.addEventListener('click', function() { mobileMenu.classList.add('hidden'); });
-            });
-        }
+          <div class="field">
+            <label for="notes">Anything we should know? <span class="hint">(optional)</span></label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Preferred start date, current student status, questions…"></textarea>
+          </div>
 
-        // ============================================
-        // SPOTLIGHT EFFECT
-        // ============================================
-        document.querySelectorAll('.spotlight-card').forEach(function(card) {
-            card.addEventListener('mousemove', function(e) {
-                var rect = card.getBoundingClientRect();
-                card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
-                card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
-            });
-        });
+          <div class="checkbox-row">
+            <input type="checkbox" id="agree" name="agree" required>
+            <label for="agree">I understand this registers me for the full Excel + Power BI + SQL bundle (packages aren't sold separately), and that Insight-Grid will contact me to confirm payment and batch details.</label>
+          </div>
 
-        // ============================================
-        // FORM SUBMISSION — using hidden iframe (NO fetch, NO cors issues)
-        // ============================================
-        var form = document.getElementById('registrationForm');
-        var submitBtn = document.getElementById('submitBtn');
-        var btnText = document.getElementById('btnText');
-        var btnIcon = document.getElementById('btnIcon');
-        var btnSpinner = document.getElementById('btnSpinner');
-        var formError = document.getElementById('formError');
-        var formSuccess = document.getElementById('formSuccess');
+          <div id="formStatus" role="status"></div>
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            formError.classList.add('hidden');
-            formSuccess.classList.add('hidden');
+          <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Submit registration</button>
+        </form>
+      </div>
+    </div>
+  </section>
 
-            var fd = new FormData(form);
-            var data = {
-                firstName: fd.get('firstName').trim(),
-                lastName: fd.get('lastName').trim(),
-                email: fd.get('email').trim(),
-                phone: fd.get('phone').trim(),
-                institution: fd.get('institution').trim(),
-                department: fd.get('department').trim(),
-                package: fd.get('package'),
-                paymentMethod: fd.get('paymentMethod'),
-                source: fd.get('source'),
-                priceTier: currentCount < MAX_EARLY_BIRD ? 'Early Bird (₦90k)' : 'Regular (₦100k)'
-            };
+  <!-- ===================== CONTACT ===================== -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact__panel">
+        <div class="dot-grid"></div>
+        <div>
+          <h2>Prefer to talk first?</h2>
+          <p>Reach out directly with questions about the bundle, the lucky-10 pricing, or SIWES support — we reply fast.</p>
+        </div>
+        <div class="contact__methods">
+          <a href="mailto:insightgrid08@gmail.com">
+            <span class="icon">✉</span>
+            <span>insightgrid08@gmail.com<small>Email us</small></span>
+          </a>
+          <a href="https://wa.me/2348163641496" target="_blank" rel="noopener">
+            <span class="icon">☎</span>
+            <span>0816 364 1496<small>WhatsApp or call</small></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            if (!data.firstName || !data.lastName || !data.email || !data.phone || !data.package || !data.paymentMethod) {
-                showFormError('Please fill in all required fields.');
-                return;
-            }
+</main>
 
-            // Show loading
-            submitBtn.disabled = true;
-            btnText.textContent = 'Submitting...';
-            btnIcon.classList.add('hidden');
-            btnSpinner.classList.remove('hidden');
+<footer>
+  <div class="container">
+    <a class="brand" href="#top"><img src="assets/logo.png" alt="Insight-Grid"></a>
+    <span>© <span id="year"></span> Insight-Grid · Data Analytics &amp; Intelligence</span>
+  </div>
+</footer>
 
-            lastSubmittedData = data;
-
-            // Build a real HTML form and POST it to the iframe
-            var postForm = document.createElement('form');
-            postForm.method = 'POST';
-            postForm.action = SCRIPT_URL;
-            postForm.target = 'hiddenFrame';
-
-            var keys = ['firstName','lastName','email','phone','institution','department','package','paymentMethod','source','priceTier'];
-            keys.forEach(function(key) {
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = data[key] || '';
-                postForm.appendChild(input);
-            });
-
-            document.body.appendChild(postForm);
-            postForm.submit();
-            document.body.removeChild(postForm);
-
-            // Timeout fallback — if no response in 8 seconds, assume success anyway
-            setTimeout(function() {
-                if (submitBtn.disabled) {
-                    onSubmissionSuccess(data);
-                }
-            }, 8000);
-        });
-
-        function onSubmissionSuccess(data) {
-            // Reset button
-            submitBtn.disabled = false;
-            btnText.textContent = 'Complete Registration';
-            btnIcon.classList.remove('hidden');
-            btnSpinner.classList.add('hidden');
-
-            // Update counter
-            if (currentCount < MAX_EARLY_BIRD) {
-                updateCounterUI(currentCount + 1);
-            }
-            setTimeout(fetchCount, 3000);
-
-            // Show success
-            formSuccess.classList.remove('hidden');
-            form.reset();
-            var tierMsg = data.priceTier.indexOf('Early') >= 0 ? ' at ₦90,000 early bird price!' : ' at regular price ₦100,000.';
-            showToast('success', 'Registration Complete!', data.firstName + ', you\'re in' + tierMsg + ' We\'ll reach out on WhatsApp.');
-            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(function() { formSuccess.classList.add('hidden'); }, 10000);
-        }
-
-        function showFormError(msg) {
-            formError.textContent = msg;
-            formError.classList.remove('hidden');
-            formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(function() { formError.classList.add('hidden'); }, 5000);
-        }
-
-        function showToast(type, title, msg) {
-            var toast = document.getElementById('toast');
-            var toastIcon = document.getElementById('toastIcon');
-            var toastTitle = document.getElementById('toastTitle');
-            var toastMsg = document.getElementById('toastMsg');
-            toastTitle.textContent = title;
-            toastMsg.textContent = msg;
-            if (type === 'success') {
-                toastIcon.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
-                toastIcon.className = 'w-8 h-8 rounded-lg bg-green-500/15 flex items-center justify-center flex-shrink-0';
-            } else {
-                toastIcon.innerHTML = '<svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
-                toastIcon.className = 'w-8 h-8 rounded-lg bg-red-500/15 flex items-center justify-center flex-shrink-0';
-            }
-            toast.classList.add('show');
-            setTimeout(function() { toast.classList.remove('show'); }, 5000);
-        }
-
-        // Navbar scroll
-        window.addEventListener('scroll', function() {
-            var nav = document.querySelector('nav > div > div');
-            if (nav) nav.style.background = window.scrollY > 50 ? 'rgba(22,26,46,0.92)' : 'rgba(22,26,46,0.85)';
-        });
-    </script>
+<script src="js/script.js"></script>
 </body>
 </html>
