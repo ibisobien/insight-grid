@@ -8,7 +8,7 @@
 const CONFIG = {
   // Paste your deployed Google Apps Script Web App URL here.
   // It looks like: https://script.google.com/macros/s/XXXXXXXX/exec
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxsJHcRgsX1cpNErCH0kzLteedrPAlWemkLWDpsOuZ3edFQop8N8C8O3QwZAUt4ht4R/exec",
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbzwCJvsJZzEnLH1PYmnHIHFG_IpMAvhKeQSNtZR2htM9YykgLJTumaloF_7Mxm_mmDb/exec",
   LUCKY_SLOTS: 10,
   PRICE_LUCKY: 90000,
   PRICE_STANDARD: 100000
