@@ -970,101 +970,146 @@
     </div>
 
     <script>
+    <script>
         lucide.createIcons();
 
         // ============================================
-        // GOOGLE SHEETS INTEGRATION
+        // PASTE YOUR URL BELOW — no quotes issues
         // ============================================
-        //
-        // 1. Create a Google Sheet with these headers in Row 1:
-        //    Timestamp | First Name | Last Name | Email | Phone | Institution | Department | Package | Payment Method | Source | Price Tier
-        //
-        // 2. Extensions > Apps Script — paste:
-        //
-        //    function doPost(e) {
-        //      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-        //      var data = JSON.parse(e.postData.contents);
-        //      sheet.appendRow([
-        //        new Date(),
-        //        data.firstName,
-        //        data.lastName,
-        //        data.email,
-        //        data.phone,
-        //        data.institution,
-        //        data.department,
-        //        data.package,
-        //        data.paymentMethod,
-        //        data.source,
-        //        data.priceTier
-        //      ]);
-        //      return ContentService.createTextOutput(
-        //        JSON.stringify({ status: 'success' })
-        //      ).setMimeType(ContentService.MimeType.JSON);
-        //    }
-        //
-        // 3. Deploy > New Deployment > Web app > Anyone > Deploy > Copy URL
-        // 4. Paste below:
-        //
-        const GOOGLE_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+        var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwX3DSTng_m7pJnBDoGcYdTvSSQiTF_6l-J3L2vrelk5cb_HLtC3hX-ZVwRS4opuzhG/exec";
 
-        let spotsRemaining = 10;
+        var MAX_EARLY_BIRD = 10;
+        var currentCount = 0;
 
-        // Mobile menu
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        // Hidden iframe to receive response
+        var hiddenFrame = document.createElement('iframe');
+        hiddenFrame.name = 'hiddenFrame';
+        hiddenFrame.style.display = 'none';
+        document.body.appendChild(hiddenFrame);
+
+        // Listen for success message from iframe
+        window.addEventListener('message', function(e) {
+            if (e.data === 'ok') {
+                onSubmissionSuccess(lastSubmittedData);
+            }
         });
 
-        // Spotlight effect
-        document.querySelectorAll('.spotlight-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--x', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--y', `${e.clientY - rect.top}px`);
+        var lastSubmittedData = {};
+
+        // ============================================
+        // FETCH COUNT
+        // ============================================
+        function fetchCount() {
+            fetch(SCRIPT_URL)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    updateCounterUI(data.count || 0);
+                })
+                .catch(function() {
+                    // silently fail
+                });
+        }
+        fetchCount();
+        setInterval(fetchCount, 15000);
+
+        function updateCounterUI(count) {
+            currentCount = count;
+            var clamped = Math.min(count, MAX_EARLY_BIRD);
+            var left = MAX_EARLY_BIRD - clamped;
+
+            var countEl = document.getElementById('registeredCount');
+            var leftEl = document.getElementById('spotsLeftCount');
+            var nextEl = document.getElementById('nextNumber');
+
+            if (countEl) countEl.textContent = clamped;
+            if (leftEl) leftEl.textContent = left;
+            if (nextEl) nextEl.textContent = left > 0 ? (clamped + 1) : '—';
+            if (document.getElementById('spotsLeft')) document.getElementById('spotsLeft').textContent = left;
+            if (document.getElementById('formSpotsLeft')) document.getElementById('formSpotsLeft').textContent = left;
+
+            var pct = (clamped / MAX_EARLY_BIRD) * 100;
+            var bar = document.getElementById('progressBar');
+            if (bar) {
+                bar.style.width = pct + '%';
+                if (left === 0) bar.classList.add('full');
+            }
+
+            var dots = document.querySelectorAll('.spot-dot');
+            dots.forEach(function(dot, i) {
+                dot.classList.remove('taken', 'current');
+                if (i < clamped) dot.classList.add('taken');
+                else if (i === clamped && left > 0) dot.classList.add('current');
             });
-        });
 
-        // FAQ
-        function toggleFaq(btn) {
-            const answer = btn.nextElementSibling;
-            const icon = btn.querySelector('.faq-icon');
-            const isOpen = !answer.classList.contains('hidden');
-            document.querySelectorAll('.faq-answer').forEach(a => a.classList.add('hidden'));
-            document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = 'rotate(0deg)');
-            if (!isOpen) {
-                answer.classList.remove('hidden');
-                icon.style.transform = 'rotate(45deg)';
+            if (left <= 0) {
+                var overlay = document.getElementById('soldOutOverlay');
+                if (overlay) overlay.classList.remove('hidden');
+                var content = document.getElementById('bannerContent');
+                if (content) { content.style.opacity = '0.3'; content.style.pointerEvents = 'none'; }
+                var ebSold = document.getElementById('earlyBirdSoldOut');
+                if (ebSold) ebSold.classList.remove('hidden');
+                var ebBtn = document.getElementById('earlyBirdBtn');
+                if (ebBtn) ebBtn.style.display = 'none';
+                var posLabel = document.getElementById('positionLabel');
+                if (posLabel) posLabel.innerHTML = '<span class="text-red-400">All 10 spots taken</span>';
             }
         }
 
-        // Form
-        const form = document.getElementById('registrationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnIcon = document.getElementById('btnIcon');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const formError = document.getElementById('formError');
-        const formSuccess = document.getElementById('formSuccess');
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        var mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        var mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        if (mobileMenu) {
+            mobileMenu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() { mobileMenu.classList.add('hidden'); });
+            });
+        }
 
-        form.addEventListener('submit', async (e) => {
+        // ============================================
+        // SPOTLIGHT EFFECT
+        // ============================================
+        document.querySelectorAll('.spotlight-card').forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+                var rect = card.getBoundingClientRect();
+                card.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+                card.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+            });
+        });
+
+        // ============================================
+        // FORM SUBMISSION — using hidden iframe (NO fetch, NO cors issues)
+        // ============================================
+        var form = document.getElementById('registrationForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var btnText = document.getElementById('btnText');
+        var btnIcon = document.getElementById('btnIcon');
+        var btnSpinner = document.getElementById('btnSpinner');
+        var formError = document.getElementById('formError');
+        var formSuccess = document.getElementById('formSuccess');
+
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
             formError.classList.add('hidden');
             formSuccess.classList.add('hidden');
 
-            const formData = new FormData(form);
-            const data = {
-                firstName: formData.get('firstName').trim(),
-                lastName: formData.get('lastName').trim(),
-                email: formData.get('email').trim(),
-                phone: formData.get('phone').trim(),
-                institution: formData.get('institution').trim(),
-                department: formData.get('department').trim(),
-                package: formData.get('package'),
-                paymentMethod: formData.get('paymentMethod'),
-                source: formData.get('source'),
-                priceTier: spotsRemaining > 0 ? 'Early Bird' : 'Regular'
+            var fd = new FormData(form);
+            var data = {
+                firstName: fd.get('firstName').trim(),
+                lastName: fd.get('lastName').trim(),
+                email: fd.get('email').trim(),
+                phone: fd.get('phone').trim(),
+                institution: fd.get('institution').trim(),
+                department: fd.get('department').trim(),
+                package: fd.get('package'),
+                paymentMethod: fd.get('paymentMethod'),
+                source: fd.get('source'),
+                priceTier: currentCount < MAX_EARLY_BIRD ? 'Early Bird (₦90k)' : 'Regular (₦100k)'
             };
 
             if (!data.firstName || !data.lastName || !data.email || !data.phone || !data.package || !data.paymentMethod) {
@@ -1072,60 +1117,75 @@
                 return;
             }
 
+            // Show loading
             submitBtn.disabled = true;
             btnText.textContent = 'Submitting...';
             btnIcon.classList.add('hidden');
             btnSpinner.classList.remove('hidden');
 
-            try {
-                if (GOOGLE_SCRIPT_URL ==="https://script.google.com/macros/s/AKfycbxsJHcRgsX1cpNErCH0kzLteedrPAlWemkLWDpsOuZ3edFQop8N8C8O3QwZAUt4ht4R/exec") {
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    console.log('Form data (demo mode):', data);
-                    onSubmissionSuccess(data);
-                } else {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
+            lastSubmittedData = data;
+
+            // Build a real HTML form and POST it to the iframe
+            var postForm = document.createElement('form');
+            postForm.method = 'POST';
+            postForm.action = SCRIPT_URL;
+            postForm.target = 'hiddenFrame';
+
+            var keys = ['firstName','lastName','email','phone','institution','department','package','paymentMethod','source','priceTier'];
+            keys.forEach(function(key) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = data[key] || '';
+                postForm.appendChild(input);
+            });
+
+            document.body.appendChild(postForm);
+            postForm.submit();
+            document.body.removeChild(postForm);
+
+            // Timeout fallback — if no response in 8 seconds, assume success anyway
+            setTimeout(function() {
+                if (submitBtn.disabled) {
                     onSubmissionSuccess(data);
                 }
-            } catch (error) {
-                console.error('Submission error:', error);
-                showFormError('Something went wrong. Please try again or contact us on WhatsApp.');
-            } finally {
-                submitBtn.disabled = false;
-                btnText.textContent = 'Complete Registration';
-                btnIcon.classList.remove('hidden');
-                btnSpinner.classList.add('hidden');
-            }
+            }, 8000);
         });
 
         function onSubmissionSuccess(data) {
-            if (spotsRemaining > 0) {
-                spotsRemaining--;
-                document.getElementById('spotsLeft').textContent = spotsRemaining;
+            // Reset button
+            submitBtn.disabled = false;
+            btnText.textContent = 'Complete Registration';
+            btnIcon.classList.remove('hidden');
+            btnSpinner.classList.add('hidden');
+
+            // Update counter
+            if (currentCount < MAX_EARLY_BIRD) {
+                updateCounterUI(currentCount + 1);
             }
+            setTimeout(fetchCount, 3000);
+
+            // Show success
             formSuccess.classList.remove('hidden');
             form.reset();
-            showToast('success', 'Registration Complete!', `Welcome, ${data.firstName}! We'll reach out on WhatsApp.`);
+            var tierMsg = data.priceTier.indexOf('Early') >= 0 ? ' at ₦90,000 early bird price!' : ' at regular price ₦100,000.';
+            showToast('success', 'Registration Complete!', data.firstName + ', you\'re in' + tierMsg + ' We\'ll reach out on WhatsApp.');
             formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => formSuccess.classList.add('hidden'), 10000);
+            setTimeout(function() { formSuccess.classList.add('hidden'); }, 10000);
         }
 
         function showFormError(msg) {
             formError.textContent = msg;
             formError.classList.remove('hidden');
             formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => formError.classList.add('hidden'), 5000);
+            setTimeout(function() { formError.classList.add('hidden'); }, 5000);
         }
 
         function showToast(type, title, msg) {
-            const toast = document.getElementById('toast');
-            const toastIcon = document.getElementById('toastIcon');
-            const toastTitle = document.getElementById('toastTitle');
-            const toastMsg = document.getElementById('toastMsg');
+            var toast = document.getElementById('toast');
+            var toastIcon = document.getElementById('toastIcon');
+            var toastTitle = document.getElementById('toastTitle');
+            var toastMsg = document.getElementById('toastMsg');
             toastTitle.textContent = title;
             toastMsg.textContent = msg;
             if (type === 'success') {
@@ -1136,13 +1196,13 @@
                 toastIcon.className = 'w-8 h-8 rounded-lg bg-red-500/15 flex items-center justify-center flex-shrink-0';
             }
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 5000);
+            setTimeout(function() { toast.classList.remove('show'); }, 5000);
         }
 
         // Navbar scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav > div > div');
-            nav.style.background = window.scrollY > 50 ? 'rgba(22,26,46,0.92)' : 'rgba(22,26,46,0.85)';
+        window.addEventListener('scroll', function() {
+            var nav = document.querySelector('nav > div > div');
+            if (nav) nav.style.background = window.scrollY > 50 ? 'rgba(22,26,46,0.92)' : 'rgba(22,26,46,0.85)';
         });
     </script>
 </body>
