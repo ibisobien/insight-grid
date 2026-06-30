@@ -34,8 +34,8 @@ manually from the Apps Script editor to create it immediately).
 Open `js/script.js` in this repo.
 Find this line near the top:
 ```js
-   SCRIPT_URL: "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE",
-   ```
+   SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxsJHcRgsX1cpNErCH0kzLteedrPAlWemkLWDpsOuZ3edFQop8N8C8O3QwZAUt4ht4R/exec)",
+   
 Replace the placeholder with the Web app URL you copied in step 1.8.
 Save the file.
 That's it — the registration form and the "lucky 10" counter on the pricing
