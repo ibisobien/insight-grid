@@ -33,8 +33,14 @@ function countRegistrations_() {
 
 /**
  * Handles GET requests.
- * ?action=count -> returns how many people are registered,
- * how many lucky-10 spots are left, and the price that applies.
+ * ?action=count    -> returns how many people are registered,
+ *                      how many lucky-10 spots are left, and the price.
+ * ?action=register -> appends a new registration row, reading the
+ *                      registrant's details from the query parameters.
+ *
+ * Registration is done via GET (not POST) deliberately — Apps Script
+ * Web Apps can drop the POST body during their internal redirect, but
+ * GET query parameters survive that redirect reliably.
  */
 function doGet(e) {
   const action = e && e.parameter && e.parameter.action;
@@ -46,31 +52,32 @@ function doGet(e) {
     return jsonOut_({ result: "success", count: count, slotsLeft: slotsLeft, price: price });
   }
 
+  if (action === "register") {
+    return registerEntry_(e.parameter);
+  }
+
   return jsonOut_({ result: "error", error: "Unknown action" });
 }
 
-/**
- * Handles POST requests — appends a new registration row.
- * Expects a JSON body (sent as text/plain to avoid CORS preflight):
- * { fullName, phone, email, bundle, siwes, notes, timestamp }
- */
-function doPost(e) {
+function registerEntry_(params) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    const fullName = (params.fullName || "").trim();
+    const phone = (params.phone || "").trim();
+    const email = (params.email || "").trim();
 
-    if (!data.fullName || !data.phone || !data.email) {
+    if (!fullName || !phone || !email) {
       return jsonOut_({ result: "error", error: "Missing required fields" });
     }
 
     const sheet = getSheet_();
     sheet.appendRow([
-      data.timestamp || new Date().toISOString(),
-      data.fullName,
-      data.phone,
-      data.email,
-      data.bundle || "Excel + Power BI + SQL — Full 3-Month Bundle",
-      data.siwes || "No",
-      data.notes || ""
+      params.timestamp || new Date().toISOString(),
+      fullName,
+      phone,
+      email,
+      params.bundle || "Excel + Power BI + SQL — Full 3-Month Bundle",
+      params.siwes || "No",
+      params.notes || ""
     ]);
 
     const count = countRegistrations_();
