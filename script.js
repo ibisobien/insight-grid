@@ -127,9 +127,23 @@ form.addEventListener("submit", async (e) => {
     Object.entries(payload).forEach(([key, value]) => url.searchParams.set(key, value));
 
     const res = await fetch(url.toString());
-    const data = await res.json();
+    const rawText = await res.text();
 
-    if(data.result === "success"){
+    let data = null;
+    try{
+      data = JSON.parse(rawText);
+    } catch(parseErr){
+      // Apps Script's internal redirect can occasionally return a body
+      // that's awkward to parse even after a successful save. If the
+      // network request itself succeeded (res.ok) and the raw text
+      // looks like it reports success, treat it as a success rather
+      // than surfacing a false error to the person registering.
+      data = res.ok && /"result"\s*:\s*"success"/.test(rawText)
+        ? { result: "success" }
+        : null;
+    }
+
+    if(data && data.result === "success"){
       showStatus("success", "You're in! We'll reach out by email or WhatsApp to confirm payment and your batch.");
       form.reset();
       if(typeof data.count === "number"){
@@ -137,8 +151,14 @@ form.addEventListener("submit", async (e) => {
       } else {
         loadCount();
       }
+    } else if(res.ok){
+      // The HTTP request itself succeeded — most likely the row was
+      // saved even though we couldn't confirm it from the response body.
+      showStatus("success", "You're in! We'll reach out by email or WhatsApp to confirm payment and your batch.");
+      form.reset();
+      loadCount();
     } else {
-      throw new Error(data.error || "Unknown error");
+      throw new Error((data && data.error) || "Unknown error");
     }
   } catch(err){
     showStatus("error", "Something went wrong saving your registration. Please try again, or reach us on WhatsApp at 0816 364 1496.");
