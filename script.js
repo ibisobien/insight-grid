@@ -106,12 +106,13 @@ form.addEventListener("submit", async (e) => {
 
   const formData = new FormData(form);
   const payload = {
-    fullName: formData.get("fullName")?.trim(),
-    phone: formData.get("phone")?.trim(),
-    email: formData.get("email")?.trim(),
+    action: "register",
+    fullName: (formData.get("fullName") || "").trim(),
+    phone: (formData.get("phone") || "").trim(),
+    email: (formData.get("email") || "").trim(),
     bundle: "Excel + Power BI + SQL — Full 3-Month Bundle",
-    siwes: formData.get("siwes"),
-    notes: formData.get("notes")?.trim() || "",
+    siwes: formData.get("siwes") || "No",
+    notes: (formData.get("notes") || "").trim(),
     timestamp: new Date().toISOString()
   };
 
@@ -120,11 +121,13 @@ form.addEventListener("submit", async (e) => {
   showStatus("loading", "Saving your registration…");
 
   try{
-    const res = await fetch(CONFIG.SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight on Apps Script
-      body: JSON.stringify(payload)
-    });
+    // Sent as a GET request with query params (not POST) because Apps
+    // Script Web Apps can drop POST bodies during their internal
+    // redirect, while GET query params survive it reliably.
+    const url = new URL(CONFIG.SCRIPT_URL);
+    Object.entries(payload).forEach(([key, value]) => url.searchParams.set(key, value));
+
+    const res = await fetch(url.toString());
     const data = await res.json();
 
     if(data.result === "success"){
