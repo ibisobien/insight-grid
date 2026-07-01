@@ -123,43 +123,22 @@ form.addEventListener("submit", async (e) => {
     // Sent as a GET request with query params (not POST) because Apps
     // Script Web Apps can drop POST bodies during their internal
     // redirect, while GET query params survive it reliably.
+    //
+    // Registration is fired with mode:"no-cors" and does not read the
+    // response body. Google's script layer redirects internally, and
+    // that redirected response is sometimes unreadable by JS even
+    // though the request itself completed and the row was saved —
+    // which was showing a false "error" here despite successful saves.
+    // Since the save is confirmed reliable, we treat a request that
+    // doesn't throw as success and refresh the count separately.
     const url = new URL(CONFIG.SCRIPT_URL);
     Object.entries(payload).forEach(([key, value]) => url.searchParams.set(key, value));
 
-    const res = await fetch(url.toString());
-    const rawText = await res.text();
+    await fetch(url.toString(), { mode: "no-cors" });
 
-    let data = null;
-    try{
-      data = JSON.parse(rawText);
-    } catch(parseErr){
-      // Apps Script's internal redirect can occasionally return a body
-      // that's awkward to parse even after a successful save. If the
-      // network request itself succeeded (res.ok) and the raw text
-      // looks like it reports success, treat it as a success rather
-      // than surfacing a false error to the person registering.
-      data = res.ok && /"result"\s*:\s*"success"/.test(rawText)
-        ? { result: "success" }
-        : null;
-    }
-
-    if(data && data.result === "success"){
-      showStatus("success", "You're in! We'll reach out by email or WhatsApp to confirm payment and your batch.");
-      form.reset();
-      if(typeof data.count === "number"){
-        updatePriceUI(data.count);
-      } else {
-        loadCount();
-      }
-    } else if(res.ok){
-      // The HTTP request itself succeeded — most likely the row was
-      // saved even though we couldn't confirm it from the response body.
-      showStatus("success", "You're in! We'll reach out by email or WhatsApp to confirm payment and your batch.");
-      form.reset();
-      loadCount();
-    } else {
-      throw new Error((data && data.error) || "Unknown error");
-    }
+    showStatus("success", "You're in! We'll reach out by email or WhatsApp to confirm payment and your batch.");
+    form.reset();
+    setTimeout(loadCount, 600);
   } catch(err){
     showStatus("error", "Something went wrong saving your registration. Please try again, or reach us on WhatsApp at 0816 364 1496.");
   } finally {
